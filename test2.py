@@ -1,9 +1,12 @@
 print ('hello')
 from pymodbus.client.sync import ModbusSerialClient as ModbusClient
-from pymodbus.registger_read_message import ReadInputRegisterResponse
+#from pymodbus.registger_read_message import ReadInputRegisterResponse
 
-client = ModbusClient(method = 'rtu' , port = 'COM1' , stopbits=1, bytesize=8, parity ='N', baudrate='9600' ,timeout=0,3)
-#client = ModbusClient(method = 'TCP/IP' , port = '502' , stopbits=1, bytesize=8, parity ='N', baudrate='9600' ,timeout=0,3)
+client = ModbusClient(method = 'rtu' , port = 'COM10' , stopbits=1, parity ='N', baudrate='115200' ,timeout=0.5)#, unit='0x01')
+#client = ModbusClient(method = 'rtu' , port = 'COM10' , stopbits=1, bytesize=8, parity ='N', baudrate='115200' ,timeout=0.5)
+#client = ModbusClient(method = 'rtu' , port = 'COM10' , stopbits=1, bytesize=8, parity ='N', baudrate='9600' ,timeout=0.3)
+
+
 
 #client = ModbusClient(me)
 
@@ -11,6 +14,13 @@ client = ModbusClient(method = 'rtu' , port = 'COM1' , stopbits=1, bytesize=8, p
 connection = client.connect()
 print(connection)
 
-#value=client.read_coils(address, count)
-#value = client.read_input_registers(300, 4, unit=0x01)  #300 is address, 4 is size, 0x01 is slave ID
-#print value
+response = client.read_holding_registers(5300,110,unit=1)
+print response.registers
+print response.registers[0]
+print ('xXx')
+
+#Read input reg not working???
+#response = client.read_input_registers(35012,4,unit=1)
+#print response
+#print response.registers[0]
+#print ('xXx')
