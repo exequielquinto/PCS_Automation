@@ -1,14 +1,14 @@
 import time
 from pymodbus.client.sync import ModbusSerialClient as ModbusClient
 
-client = ModbusClient(method = 'rtu' , port = 'COM10' , stopbits=1, parity ='N', baudrate='115200' ,timeout=0.5)#, unit='0x01')
+client = ModbusClient(method = 'rtu' , port = 'COM4' , stopbits=1, parity ='N', baudrate='115200' ,timeout=0.5)#, unit='0x01')
 
 connection = client.connect()
 print(connection)
 
 #For load sequence
-bi_time=900  #15mins Burn In time in seconds
-capture_time=180   # 3mins //time in seconds for each successive eff capture
+bi_time=60  #15mins Burn In time in seconds
+capture_time=60   # 3mins //time in seconds for each successive eff capture
 
 #For 65VDC  5kW
 #steps=(0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22)
@@ -76,6 +76,19 @@ def min_load():
             print('pac set error2')
             client.write_registers(5054, discharge_msb[max(steps)])
             client.write_register(5055, discharge_lsb[max(steps)])
+def charge_4k():
+    try:
+        client.write_registers(5054, 50554)
+        client.write_register(5055, 0)
+    except:
+        try:
+            print('pac set error1')
+            client.write_registers(5054, 50554)
+            client.write_register(5055, 0)
+        except:
+            print('pac set error2')
+            client.write_registers(5054, 50554)
+            client.write_register(5055, 0) 
     
 for step in steps:
     if step == 0:
@@ -95,5 +108,9 @@ for step in steps:
 
     print('measure')
 
-min_load()                
+time2=time.time()
+while (time.time()-time2) < 300:
+    charge_4k()
+    time.sleep(3)
+
 print('finished')
