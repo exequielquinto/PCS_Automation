@@ -25,8 +25,9 @@ print response.registers
 print response.registers[0]
 print ('xXx')
 
-#Read input reg not working???
-#response = client.read_input_registers(35012,4,unit=1)
-#print response
-#print response.registers[0]
-#print ('xXx')
+#Read input reg
+response = client.read_input_registers(5001,2,unit=1)
+print response.registers
+print hex(response.registers[0])
+print hex(response.registers[1])
+print ('xXx')
