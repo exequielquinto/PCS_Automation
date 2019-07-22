@@ -1,27 +1,47 @@
 import struct
+
+
 def binary(num):
     return ''.join(bin(ord(c)).replace('0b', '').rjust(8, '0') for c in struct.pack('!f', num))
 
-x=binary(5000)
+def float32_to_bin(num):
+    return bin(struct.unpack('!I', struct.pack('!f', num))[0])[2:].zfill(32)
+
+def bin_to_float32(binary):
+    return struct.unpack('!f',struct.pack('!I', int(binary, 2)))[0]
+
+def dec_to_bin(msb,lsb):
+    x=bin(int(msb))
+    y=bin(int(lsb))
+    return str(x)[2:18].zfill(16)+str(y)[2:18].zfill(16)
+
+def dec_to_float32(msb,lsb):
+    return bin_to_float32(dec_to_bin(msb, lsb))
+
+def float32_to_msb(num):
+    return int(float32_to_bin(num)[0:16],2)
+
+def float32_to_lsb(num):
+    return int(float32_to_bin(num)[16:32],2)
+
+x=float32_to_bin(-4000)
+print float32_to_msb(-4000)
+print float32_to_lsb(-4000)
+#print Pac_MSB
+
 x1=x[0:16]
 x2=x[16:32]
+
 print x
-print x1
-print x2
+print x1,x2
 
-y=hex(int(x,2))
-y1=hex(int(x1,2))
-y2=hex(int(x2,2))
-print y
-print y1
-print y2
-
-z=int(x,2)
 z1=int(x1,2)
 z2=int(x2,2)
-print z
-print z1
-print z2
 
-print hex(z1)
-print hex(z2)
+print z1,z2
+
+w=dec_to_bin(z1, z2)
+print w
+
+print bin_to_float32(w)
+print dec_to_float32(z1, z2)
